@@ -1,0 +1,953 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B.Tech Student Management System</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #2d2d2d;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #404040;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        .input-field {
+            background: #0f0f0f;
+            color: #e0e0e0;
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #333333;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #333333;
+        }
+
+        tr:hover {
+            background: #2a2a2a;
+            color: #e0e0e0;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #808080;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #b0b0b0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .attendance-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .attendance-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            border: 2px solid #333333;
+            transition: all 0.3s ease;
+        }
+
+        .attendance-row:hover {
+            background: #3a3a3a;
+            border-color: #667eea;
+        }
+
+        .attendance-info {
+            flex: 1;
+            color: #e0e0e0;
+        }
+
+        .attendance-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-sm {
+            padding: 6px 16px;
+            font-size: 14px;
+        }
+    
+        select {
+            background: #0f0f0f;
+            color: #e0e0e0;
+        }
+
+        table {
+            color: #e0e0e0;
+        }
+
+        th {
+            background: #0f0f0f !important;
+            color: #e0e0e0 !important;
+        }
+
+        td {
+            color: #b0b0b0;
+        }
+
+        .modal-content {
+            background: #1a1a1a !important;
+            color: #e0e0e0;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: #e0e0e0;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 style="color: #e0e0e0;">🎓 B.Tech Student Management System</h1>
+            <p>Manage students, courses, and attendance all in one place</p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalStudents">0</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <div class="stat-number" id="totalCourses">0</div>
+                <div class="stat-label">Total Courses</div>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="stat-number" id="avgAttendance">0%</div>
+                <div class="stat-label">Average Attendance</div>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                <div class="stat-number" id="activeStudents">0</div>
+                <div class="stat-label">Active Students</div>
+            </div>
+        </div>
+
+        <!-- Main Card -->
+        <div class="card">
+            <!-- Navigation Tabs -->
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('students')">Students</button>
+                <button class="nav-tab" onclick="switchTab('courses')">Courses</button>
+                <button class="nav-tab" onclick="switchTab('attendance')">Attendance</button>
+                <button class="nav-tab" onclick="switchTab('reports')">Reports</button>
+            </div>
+
+            <!-- Students Tab -->
+            <div id="students" class="tab-content active">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="font-size: 24px; font-weight: bold; color: #e0e0e0;">Student Management</h2>
+                    <button class="btn btn-primary" onclick="openAddStudentModal()">+ Add New Student</button>
+                </div>
+
+                <div class="search-box">
+                    <input type="text" class="input-field" id="searchStudent" placeholder="Search by name, roll number, or email..." onkeyup="searchStudents()">
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table id="studentsTable">
+                        <thead>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Branch</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Branches Tab -->
+            <div id="courses" class="tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="font-size: 24px; font-weight: bold; color: #e0e0e0;">Branch Management</h2>
+                    <button class="btn btn-primary" onclick="openAddCourseModal()">+ Add New Branch</button>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table id="coursesTable">
+                        <thead>
+                            <tr>
+                                <th>Branch</th>
+                                <th>Branch Code</th>
+                                <th>HOD Name</th>
+                                <th>Students Enrolled</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="coursesTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Attendance Tab -->
+            <div id="attendance" class="tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="font-size: 24px; font-weight: bold; color: #e0e0e0;">Attendance System</h2>
+                    <div>
+                        <input type="date" class="input-field" id="attendanceDate" style="width: auto; display: inline-block; margin-right: 10px;">
+                        <button class="btn btn-success" onclick="saveAttendance()">Save Attendance</button>
+                    </div>
+                </div>
+
+                <div class="attendance-grid" id="attendanceGrid">
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports" class="tab-content">
+                <h2 style="font-size: 24px; font-weight: bold; color: #e0e0e0; margin-bottom: 20px;">Student Reports</h2>
+                
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>Name</th>
+                                <th>Branch</th>
+                                <th>Attendance %</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Student Modal -->
+    <div id="studentModal" class="modal">
+        <div class="modal-content">
+            <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px;" id="studentModalTitle">Add New Student</h2>
+            <form id="studentForm" onsubmit="saveStudent(event)">
+                <input type="hidden" id="studentId">
+                
+                <div class="form-group">
+                    <label>Roll Number *</label>
+                    <input type="text" class="input-field" id="rollNumber" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" class="input-field" id="studentName" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" class="input-field" id="studentEmail" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number *</label>
+                    <input type="tel" class="input-field" id="studentPhone" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Branch *</label>
+                    <select class="input-field" id="studentCourse" required>
+                        <option value="">Select Course</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Status *</label>
+                    <select class="input-field" id="studentStatus" required>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn btn-danger" onclick="closeStudentModal()">Cancel</button>
+                    <button type="submit" class="btn btn-success">Save Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Branch Modal -->
+    <div id="courseModal" class="modal">
+        <div class="modal-content">
+            <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px;" id="courseModalTitle">Add New Branch</h2>
+            <form id="courseForm" onsubmit="saveCourse(event)">
+                <input type="hidden" id="courseId">
+                
+                <div class="form-group">
+                    <label>Branch Name *</label>
+                    <input type="text" class="input-field" id="courseName" placeholder="e.g., Computer Science" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Branch Code *</label>
+                    <input type="text" class="input-field" id="courseCode" placeholder="e.g., CS" required>
+                </div>
+
+                <div class="form-group">
+                    <label>HOD Name *</label>
+                    <input type="text" class="input-field" id="courseInstructor" placeholder="Head of Department" required>
+                </div>
+
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn btn-danger" onclick="closeCourseModal()">Cancel</button>
+                    <button type="submit" class="btn btn-success">Save Branch</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Data Storage - Initialize with dummy data
+        let students = [];
+        let courses = [
+            { id: 1, name: 'Computer Science', code: 'CS', instructor: 'Dr. Rajesh Kumar', duration: 48 },
+            { id: 2, name: 'Electrical Engineering', code: 'EE', instructor: 'Prof. Amit Singh', duration: 48 },
+            { id: 3, name: 'Electronics & Communication', code: 'ECE', instructor: 'Dr. Priya Sharma', duration: 48 },
+            { id: 4, name: 'Mechanical Engineering', code: 'ME', instructor: 'Prof. Vikram Patel', duration: 48 },
+            { id: 5, name: 'Civil Engineering', code: 'CE', instructor: 'Dr. Neha Verma', duration: 48 }
+        ];
+
+        const dummyStudents = [
+            { id: 1, rollNumber: 'CS001', name: 'Raj Kumar', email: 'raj@example.com', phone: '9876543210', course: 'Computer Science', status: 'Active', attendance: {} },
+            { id: 2, rollNumber: 'CS002', name: 'Priya Singh', email: 'priya@example.com', phone: '9876543211', course: 'Computer Science', status: 'Active', attendance: {} },
+            { id: 3, rollNumber: 'EE001', name: 'Amit Patel', email: 'amit@example.com', phone: '9876543212', course: 'Electrical Engineering', status: 'Active', attendance: {} },
+            { id: 4, rollNumber: 'ECE001', name: 'Neha Gupta', email: 'neha@example.com', phone: '9876543213', course: 'Electronics & Communication', status: 'Active', attendance: {} },
+            { id: 5, rollNumber: 'ME001', name: 'Vikram Singh', email: 'vikram@example.com', phone: '9876543214', course: 'Mechanical Engineering', status: 'Active', attendance: {} },
+            { id: 6, rollNumber: 'CE001', name: 'Sneha Verma', email: 'sneha@example.com', phone: '9876543215', course: 'Civil Engineering', status: 'Active', attendance: {} }
+        ];
+
+        let currentEditingStudent = null;
+        let currentEditingCourse = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load dummy students if none exist
+            if (students.length === 0) {
+                students = JSON.parse(JSON.stringify(dummyStudents));
+            }
+            renderStudents();
+            renderCourses();
+            renderAttendanceGrid();
+            renderReports();
+            updateStats();
+            setTodayDate();
+            populateCourseDropdown();
+        });
+
+        // Tab Switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            // Refresh data for specific tabs
+            if (tabName === 'attendance') {
+                renderAttendanceGrid();
+            } else if (tabName === 'reports') {
+                renderReports();
+            }
+        }
+
+        // Student Functions
+        function renderStudents(filteredStudents = students) {
+            const tbody = document.getElementById('studentsTableBody');
+            tbody.innerHTML = '';
+
+            filteredStudents.forEach(student => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${student.rollNumber}</strong></td>
+                    <td>${student.name}</td>
+                    <td>${student.email}</td>
+                    <td>${student.course}</td>
+                    <td>${student.phone}</td>
+                    <td><span class="badge ${student.status === 'Active' ? 'badge-success' : 'badge-danger'}">${student.status}</span></td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="editStudent(${student.id})">Edit</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteStudent(${student.id})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function searchStudents() {
+            const searchTerm = document.getElementById('searchStudent').value.toLowerCase();
+            const filtered = students.filter(student => 
+                student.name.toLowerCase().includes(searchTerm) ||
+                student.rollNumber.toLowerCase().includes(searchTerm) ||
+                student.email.toLowerCase().includes(searchTerm)
+            );
+            renderStudents(filtered);
+        }
+
+        function openAddStudentModal() {
+            currentEditingStudent = null;
+            document.getElementById('studentModalTitle').textContent = 'Add New Student';
+            document.getElementById('studentForm').reset();
+            document.getElementById('studentId').value = '';
+            document.getElementById('studentModal').classList.add('active');
+        }
+
+        function closeStudentModal() {
+            document.getElementById('studentModal').classList.remove('active');
+        }
+
+        function editStudent(id) {
+            const student = students.find(s => s.id === id);
+            if (student) {
+                currentEditingStudent = student;
+                document.getElementById('studentModalTitle').textContent = 'Edit Student';
+                document.getElementById('studentId').value = student.id;
+                document.getElementById('rollNumber').value = student.rollNumber;
+                document.getElementById('studentName').value = student.name;
+                document.getElementById('studentEmail').value = student.email;
+                document.getElementById('studentPhone').value = student.phone;
+                document.getElementById('studentCourse').value = student.course;
+                document.getElementById('studentStatus').value = student.status;
+                document.getElementById('studentModal').classList.add('active');
+            }
+        }
+
+        function saveStudent(event) {
+            event.preventDefault();
+
+            const studentData = {
+                rollNumber: document.getElementById('rollNumber').value,
+                name: document.getElementById('studentName').value,
+                email: document.getElementById('studentEmail').value,
+                phone: document.getElementById('studentPhone').value,
+                course: document.getElementById('studentCourse').value,
+                status: document.getElementById('studentStatus').value
+            };
+
+            const studentId = document.getElementById('studentId').value;
+
+            if (studentId) {
+                // Update existing student
+                const index = students.findIndex(s => s.id == studentId);
+                students[index] = { ...students[index], ...studentData };
+            } else {
+                // Add new student
+                const newStudent = {
+                    id: students.length > 0 ? Math.max(...students.map(s => s.id)) + 1 : 1,
+                    ...studentData,
+                    attendance: {}
+                };
+                students.push(newStudent);
+            }
+
+            renderStudents();
+            renderAttendanceGrid();
+            renderReports();
+            updateStats();
+            closeStudentModal();
+        }
+
+        function deleteStudent(id) {
+            if (confirm('Are you sure you want to delete this student?')) {
+                students = students.filter(s => s.id !== id);
+                renderStudents();
+                renderAttendanceGrid();
+                renderReports();
+                updateStats();
+            }
+        }
+
+        // Course Functions
+        function renderCourses() {
+            const tbody = document.getElementById('coursesTableBody');
+            tbody.innerHTML = '';
+
+            courses.forEach(course => {
+                const enrolledCount = students.filter(s => s.course === course.name).length;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${course.name}</strong></td>
+                    <td>${course.code}</td>
+                    <td>${course.instructor}</td>
+                    <td><span class="badge badge-success">${enrolledCount} students</span></td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="editCourse(${course.id})">Edit</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteCourse(${course.id})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function populateCourseDropdown() {
+            const select = document.getElementById('studentCourse');
+            select.innerHTML = '<option value="">Select Course</option>';
+            courses.forEach(course => {
+                const option = document.createElement('option');
+                option.value = course.name;
+                option.textContent = course.name;
+                select.appendChild(option);
+            });
+        }
+
+        function openAddCourseModal() {
+            currentEditingCourse = null;
+            document.getElementById('courseModalTitle').textContent = 'Add New Branch';
+            document.getElementById('courseForm').reset();
+            document.getElementById('courseId').value = '';
+            document.getElementById('courseModal').classList.add('active');
+        }
+
+        function closeCourseModal() {
+            document.getElementById('courseModal').classList.remove('active');
+        }
+
+        function editCourse(id) {
+            const course = courses.find(c => c.id === id);
+            if (course) {
+                currentEditingCourse = course;
+                document.getElementById('courseModalTitle').textContent = 'Edit Branch';
+                document.getElementById('courseId').value = course.id;
+                document.getElementById('courseName').value = course.name;
+                document.getElementById('courseCode').value = course.code;
+                document.getElementById('courseInstructor').value = course.instructor;
+                document.getElementById('courseModal').classList.add('active');
+            }
+        }
+
+        function saveCourse(event) {
+            event.preventDefault();
+
+            const courseData = {
+                name: document.getElementById('courseName').value,
+                code: document.getElementById('courseCode').value,
+                instructor: document.getElementById('courseInstructor').value,
+                duration: 48
+            };
+
+            const courseId = document.getElementById('courseId').value;
+
+            if (courseId) {
+                // Update existing branch
+                const index = courses.findIndex(c => c.id == courseId);
+                courses[index] = { ...courses[index], ...courseData };
+            } else {
+                // Add new branch
+                const newCourse = {
+                    id: courses.length > 0 ? Math.max(...courses.map(c => c.id)) + 1 : 1,
+                    ...courseData
+                };
+                courses.push(newCourse);
+            }
+
+            renderCourses();
+            populateCourseDropdown();
+            updateStats();
+            closeCourseModal();
+        }
+
+        function deleteCourse(id) {
+            if (confirm('Are you sure you want to delete this branch?')) {
+                courses = courses.filter(c => c.id !== id);
+                renderCourses();
+                populateCourseDropdown();
+                updateStats();
+            }
+        }
+
+        // Attendance Functions
+        function setTodayDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('attendanceDate').value = today;
+        }
+
+        function renderAttendanceGrid() {
+            const grid = document.getElementById('attendanceGrid');
+            grid.innerHTML = '';
+
+            const selectedDate = document.getElementById('attendanceDate').value;
+
+            students.forEach(student => {
+                const row = document.createElement('div');
+                row.className = 'attendance-row';
+                
+                const currentStatus = student.attendance[selectedDate] || 'unmarked';
+                
+                row.innerHTML = `
+                    <div class="attendance-info">
+                        <strong>${student.name}</strong> (${student.rollNumber})
+                        <br>
+                        <small style="color: #808080;">${student.course}</small>
+                    </div>
+                    <div class="attendance-buttons">
+                        <button class="btn btn-success btn-sm ${currentStatus === 'present' ? 'active' : ''}" 
+                                onclick="markAttendance(${student.id}, 'present')"
+                                style="${currentStatus === 'present' ? 'opacity: 1; transform: scale(1.05);' : 'opacity: 0.6;'}">
+                            ✓ Present
+                        </button>
+                        <button class="btn btn-danger btn-sm ${currentStatus === 'absent' ? 'active' : ''}" 
+                                onclick="markAttendance(${student.id}, 'absent')"
+                                style="${currentStatus === 'absent' ? 'opacity: 1; transform: scale(1.05);' : 'opacity: 0.6;'}">
+                            ✗ Absent
+                        </button>
+                    </div>
+                `;
+                
+                grid.appendChild(row);
+            });
+        }
+
+        function markAttendance(studentId, status) {
+            const selectedDate = document.getElementById('attendanceDate').value;
+            const student = students.find(s => s.id === studentId);
+            
+            if (student) {
+                student.attendance[selectedDate] = status;
+                renderAttendanceGrid();
+                updateStats();
+            }
+        }
+
+        function saveAttendance() {
+            const selectedDate = document.getElementById('attendanceDate').value;
+            alert(`Attendance for ${selectedDate} has been saved successfully!`);
+            renderReports();
+        }
+
+        // Reports Functions
+        function renderReports() {
+            const tbody = document.getElementById('reportsTableBody');
+            tbody.innerHTML = '';
+
+            students.forEach(student => {
+                const attendancePercentage = calculateAttendancePercentage(student);
+                const tr = document.createElement('tr');
+                
+                let statusBadge = 'badge-success';
+                let statusText = 'Excellent';
+                
+                if (attendancePercentage < 75) {
+                    statusBadge = 'badge-danger';
+                    statusText = 'Poor';
+                } else if (attendancePercentage < 85) {
+                    statusBadge = 'badge-warning';
+                    statusText = 'Average';
+                }
+                
+                tr.innerHTML = `
+                    <td><strong>${student.rollNumber}</strong></td>
+                    <td>${student.name}</td>
+                    <td>${student.course}</td>
+                    <td><strong>${attendancePercentage}%</strong></td>
+                    <td><span class="badge ${statusBadge}">${statusText}</span></td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" onclick="viewStudentDetails(${student.id})">View Details</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function calculateAttendancePercentage(student) {
+            const attendanceRecords = Object.values(student.attendance);
+            if (attendanceRecords.length === 0) return 0;
+            
+            const presentCount = attendanceRecords.filter(status => status === 'present').length;
+            return Math.round((presentCount / attendanceRecords.length) * 100);
+        }
+
+        function viewStudentDetails(id) {
+            const student = students.find(s => s.id === id);
+            if (student) {
+                const attendancePercentage = calculateAttendancePercentage(student);
+                const totalDays = Object.keys(student.attendance).length;
+                const presentDays = Object.values(student.attendance).filter(s => s === 'present').length;
+                const absentDays = totalDays - presentDays;
+                
+                alert(`Student Details:
+                
+Name: ${student.name}
+Roll Number: ${student.rollNumber}
+Email: ${student.email}
+Phone: ${student.phone}
+Course: ${student.course}
+Status: ${student.status}
+
+Attendance Summary:
+Total Days: ${totalDays}
+Present: ${presentDays} days
+Absent: ${absentDays} days
+Attendance Rate: ${attendancePercentage}%`);
+            }
+        }
+
+        // Statistics Functions
+        function updateStats() {
+            document.getElementById('totalStudents').textContent = students.length;
+            document.getElementById('totalCourses').textContent = courses.length;
+            
+            const activeStudents = students.filter(s => s.status === 'Active').length;
+            document.getElementById('activeStudents').textContent = activeStudents;
+            
+            // Calculate average attendance
+            let totalAttendance = 0;
+            let studentsWithAttendance = 0;
+            
+            students.forEach(student => {
+                const percentage = calculateAttendancePercentage(student);
+                if (percentage > 0) {
+                    totalAttendance += percentage;
+                    studentsWithAttendance++;
+                }
+            });
+            
+            const avgAttendance = studentsWithAttendance > 0 
+                ? Math.round(totalAttendance / studentsWithAttendance) 
+                : 0;
+            
+            document.getElementById('avgAttendance').textContent = avgAttendance + '%';
+        }
+
+        // Date change listener
+        document.getElementById('attendanceDate').addEventListener('change', renderAttendanceGrid);
+    </script>
+</body>
+</html>
